@@ -1,12 +1,19 @@
 <?php
 
 use App\Database\Database;
+use App\Model\Price;
+use App\Model\Product;
 
 require __DIR__ . '/../vendor/autoload.php';
+$config = require_once __DIR__ . '/../src/Config/Config.php';
 
-$config = require __DIR__ . '/../src/Config/Config.php';
-$conn = new Database($config['database']);
-var_dump($conn->getConnection());
+
+// db connection
+$db = Database::getInstance($config);
+Product::setDatabase($db);
+// print_r(Price::all());
+
+
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->post('/graphql', [App\Controller\GraphQL::class, 'handle']);

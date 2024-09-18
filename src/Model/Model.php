@@ -6,8 +6,8 @@ use App\Database\Database;
 
 abstract class Model {
     
-    protected Database $db;
-    public string $table;
+    protected static   Database $db;
+    protected static string $table;
 
       /**
      * Fillable attributes for mass assignment
@@ -18,13 +18,20 @@ abstract class Model {
     /**
      * Attributes for the model
      */
-    protected $attributes = [];
+    protected static $attributes = [];
 
 
     public function __construct(array $attributes = [])
     {
         $this->fill($attributes);
     }
+
+      // Static method to initialize the database
+      public static function setDatabase(Database $database): void
+      {
+          self::$db = $database;
+      }
+      
 // get
     public static function all():array{
         $sql = "SELECT * FROM " . static::$table;

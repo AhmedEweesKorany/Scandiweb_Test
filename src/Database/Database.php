@@ -20,6 +20,12 @@ class Database {
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
+
+    // get instance
+    public static function getInstance($config){
+        return new Database($config);
+    }
+
     /**
      * Executes a SQL query and returns the results as an associative array.
      *
