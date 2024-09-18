@@ -11,8 +11,12 @@ use GraphQL\Type\SchemaConfig;
 use RuntimeException;
 use Throwable;
 
-class GraphQL {
-    static public function handle() {
+use function PHPSTORM_META\type;
+
+class GraphQL
+{
+    static public function handle()
+    {
         // Ensure Types.php is properly required
         require_once __DIR__ . '/../Types/Types.php';
 
@@ -27,10 +31,24 @@ class GraphQL {
                 'fields' => [
                     'Products' => [
                         'type' => Type::listOf($productType),
-                        'resolve' => function($rootValue, array $args) {
+                        'resolve' => function ($rootValue, array $args) {
                             return ProductsResolver::getProducts();
                         },
                     ],
+
+                    'Product' => [
+                        'type' => $productType,
+                        'args' => [
+                            'id' => ['type' => Type::string()],
+                        ],
+                        'resolve' => function ($rootValue, array $args) {
+
+                            $product = ProductsResolver::getProductById($args['id']);
+                            
+                            return $product;
+                        },
+                    ],
+
                 ],
             ]);
 
@@ -43,15 +61,15 @@ class GraphQL {
                             'x' => ['type' => Type::int()],
                             'y' => ['type' => Type::int()],
                         ],
-                        'resolve' => static fn ($calc, array $args): int => $args['x'] + $args['y'],
+                        'resolve' => static fn($calc, array $args): int => $args['x'] + $args['y'],
                     ],
                 ],
             ]);
 
             $schema = new Schema(
                 (new SchemaConfig())
-                ->setQuery($queryType)
-                ->setMutation($mutationType)
+                    ->setQuery($queryType)
+                    ->setMutation($mutationType)
             );
 
             $rawInput = file_get_contents('php://input');
@@ -73,7 +91,6 @@ class GraphQL {
 
             $result = GraphQLBase::executeQuery($schema, $query, null, null, $variableValues);
             $output = $result->toArray();
-
         } catch (Throwable $e) {
             $output = [
                 'error' => [

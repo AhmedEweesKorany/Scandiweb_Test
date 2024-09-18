@@ -3,6 +3,7 @@
 use App\Database\Database;
 use App\Model\Price;
 use App\Model\Product;
+use GraphQL\Language\Printer;
 
 require __DIR__ . '/../vendor/autoload.php';
 $config = require_once __DIR__ . '/../src/Config/Config.php';
@@ -11,7 +12,7 @@ $config = require_once __DIR__ . '/../src/Config/Config.php';
 // db connection
 $db = Database::getInstance($config);
 Product::setDatabase($db);
-// print_r(Price::all());
+// print_r(Product::find("apple-airpods-pro"));
 
 
 
