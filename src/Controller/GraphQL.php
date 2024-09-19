@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Model\Order;
+use App\Resolvers\OrderResolver;
 use App\Resolvers\ProductsResolver;
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Definition\ObjectType;
@@ -11,7 +13,6 @@ use GraphQL\Type\SchemaConfig;
 use RuntimeException;
 use Throwable;
 
-use function PHPSTORM_META\type;
 
 class GraphQL
 {
@@ -44,7 +45,7 @@ class GraphQL
                         'resolve' => function ($rootValue, array $args) {
 
                             $product = ProductsResolver::getProductById($args['id']);
-                            
+
                             return $product;
                         },
                     ],
@@ -55,13 +56,16 @@ class GraphQL
             $mutationType = new ObjectType([
                 'name' => 'Mutation',
                 'fields' => [
-                    'sum' => [
-                        'type' => Type::int(),
+                    'createOrder' => [
+                        'type' => Type::string(),
                         'args' => [
-                            'x' => ['type' => Type::int()],
-                            'y' => ['type' => Type::int()],
+                            'details' => Type::string(),
+                            'status' => Type::string(),
+                            'total' => Type::float(),
                         ],
-                        'resolve' => static fn($calc, array $args): int => $args['x'] + $args['y'],
+                        'resolve' => function ($root, $args) {
+                            return OrderResolver::createOrder($args);
+                        },
                     ],
                 ],
             ]);

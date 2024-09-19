@@ -18,8 +18,8 @@ $attributeType = new ObjectType([
         'name' => Type::string(),
     ]
 ]);
-        
-$priceType= new ObjectType([
+
+$priceType = new ObjectType([
     'name' => 'Price',
     'description' => 'A price',
     'fields' => [
@@ -33,7 +33,7 @@ $priceType= new ObjectType([
 $productType = new ObjectType([
     'name' => 'Product',
     'description' => 'A product',
-    'fields' =>  function() use ( $priceType,$attributeType) {
+    'fields' =>  function () use ($priceType, $attributeType) {
 
         return [
             'id' => Type::string(),
@@ -45,7 +45,7 @@ $productType = new ObjectType([
             "gallery" => Type::string(),
             "prices" => [
                 'type' => Type::listOf($priceType),
-                'resolve' => function($root) {
+                'resolve' => function ($root) {
                     $productId = $root['id'];
                     $productPrices = Price::where("product_id", "=", $productId);
                     return $productPrices;
@@ -53,14 +53,26 @@ $productType = new ObjectType([
             ],
             "attributes" => [
                 'type' => Type::listOf($attributeType),
-                'resolve' => function($root) {
+                'resolve' => function ($root) {
                     $productId = $root['id'];
                     $productAttributes = Attribute::where("product_id", "=", $productId);
                     return $productAttributes;
                 }
             ],
-            
+
         ];
     }
-]); 
+]);
 
+
+$orderType = new ObjectType([
+    'name' => 'Order',
+    'description' => 'An order',
+    'fields' => [
+        'id' => Type::int(),
+        'details' => Type::nonNull(Type::string()),
+        'status' => Type::nonNull(Type::string()),
+        'total' => Type::nonNull(Type::float()),
+        'created_at' => Type::nonNull(Type::string()),
+    ]
+]);
