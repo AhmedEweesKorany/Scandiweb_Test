@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Model\Order;
 use App\Resolvers\OrderResolver;
 use App\Resolvers\ProductsResolver;
+use App\Types\Types;
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
@@ -12,7 +13,6 @@ use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use RuntimeException;
 use Throwable;
-
 
 class GraphQL
 {
@@ -23,7 +23,7 @@ class GraphQL
 
         try {
             // Ensure $productType is defined
-            if (!isset($productType)) {
+            if (!isset(Types::$productType)) {
                 throw new RuntimeException('Product type is not defined');
             }
 
@@ -31,14 +31,14 @@ class GraphQL
                 'name' => 'Query',
                 'fields' => [
                     'Products' => [
-                        'type' => Type::listOf($productType),
+                        'type' => Type::listOf(Types::$productType),
                         'resolve' => function ($rootValue, array $args) {
                             return ProductsResolver::getProducts();
                         },
                     ],
 
                     'Product' => [
-                        'type' => $productType,
+                        'type' => Types::$productType,
                         'args' => [
                             'id' => ['type' => Type::string()],
                         ],
