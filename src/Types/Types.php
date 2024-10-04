@@ -11,6 +11,7 @@ class Types{
     public static $priceType;
     public static $productType;
     public static $orderType;
+    public static $categoryType;
     public function __construct(){
         self::$attributeType = new ObjectType([
             'name' => 'Attribute',
@@ -32,6 +33,15 @@ class Types{
                 'currency' => Type::string(),
             ]
         ]);
+
+        self::$categoryType = new ObjectType([
+            'name' => 'category',
+            'description' => 'A category',
+            'fields' => [
+                'name' => Type::string(),
+            ]
+        ]);
+
 
         $priceType = self::$priceType; // Define $priceType before the function
         $attributeType = self::$attributeType; // Define $attributeType before the function

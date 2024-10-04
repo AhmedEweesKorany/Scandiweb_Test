@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\Order;
+use App\Resolvers\CategoryResolver;
 use App\Resolvers\OrderResolver;
 use App\Resolvers\ProductsResolver;
 use App\Types\Types;
@@ -18,9 +19,7 @@ class GraphQL
 {
     static public function handle()
     {
-        // Ensure Types.php is properly required
-        require_once __DIR__ . '/../Types/Types.php';
-
+    
         try {
             // Ensure $productType is defined
             if (!isset(Types::$productType)) {
@@ -47,6 +46,17 @@ class GraphQL
                             $product = ProductsResolver::getProductById($args['id']);
 
                             return $product;
+                        },
+                    ],
+
+                    'Category' => [
+                        'type' => Types::$categoryType,
+                        
+                        'resolve' => function ($rootValue, array $args) {
+
+                            $categories = CategoryResolver::getProducts();
+
+                            return $categories;
                         },
                     ],
 
