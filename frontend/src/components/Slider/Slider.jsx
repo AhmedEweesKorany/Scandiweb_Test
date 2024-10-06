@@ -43,7 +43,7 @@ function ProjectSlider({gallery,cur}) {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          infinite: true,
+          infinite: false,
           dots: true
         }
       },

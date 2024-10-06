@@ -7,13 +7,17 @@ import Navbar from './components/Navbar/Navbar';
 import Product from './Pages/Product';
 import CartContext from './Context/CartContext';
 import CartVisible from './Context/CartVisible';
+import QunatityContext from './Context/QuantityContext';
 
 const App = () => {
   const [cur,setCur] = useState("tech")
   const [cartData,setCartData] = useState([])
   const [cartVisible,setCartVisible] = useState(false)
+  const [quantity,setQuantity] = useState(0)
   return (
     <NavContext.Provider value={[cur,setCur]} >
+      <QunatityContext.Provider value={[quantity,setQuantity]}>
+
       <CartVisible.Provider value={[cartVisible,setCartVisible]} >
 
 <CartContext.Provider value={[cartData,setCartData]} >
@@ -27,6 +31,7 @@ const App = () => {
     </div>
 </CartContext.Provider>
       </CartVisible.Provider>
+      </QunatityContext.Provider>
     </NavContext.Provider>
   );
 };

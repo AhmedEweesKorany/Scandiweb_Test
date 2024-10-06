@@ -27,6 +27,7 @@ class Products extends Component {
                         id
                             name
                             category
+                            inStock
                             gallery
                             prices {
                                 amount
@@ -45,18 +46,19 @@ class Products extends Component {
     renderProduct(product, index) {
         const galleryImage = JSON.parse(product.gallery) ? JSON.parse(product.gallery) : logo;
         const price = JSON.parse(product.prices[0].currency).symbol + product.prices[0].amount;
-
+        console.log(product)
         return (
             <div key={index} className='hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)] p-3 cursor-pointer group mb-10'>
              <Link to={`/product/${product.id}`}>
-             <div>
-                    <img src={galleryImage[0]} alt={product.name} className='w-full h-[300px] object-contain' />
+             <div className='relative'>
+                    <img src={galleryImage[0]} alt={product.name} className={`w-full h-[300px] object-contain ${!product.inStock && "opacity-20"}`} />
+                    {!product.inStock && <h2 className='text-[50px] text-gray-700 opacity-40 absolute top-32 left-20'> out of stock </h2>}
                 </div>
              </Link>
 
-             <div className='hidden group-hover:flex  w-[50px] h-[50px] bg-green-500 text-white rounded-full float-end items-center justify-center' onClick={()=>console.log("cart")}>
+             {product.inStock && <div className='hidden group-hover:flex  w-[50px] h-[50px] bg-green-500 text-white rounded-full float-end items-center justify-center' onClick={()=>console.log("cart")}>
                 <IoCartOutline/>
-                 </div>
+                 </div>}
             
                 <div>
                     <h1>{product.name}</h1>
@@ -86,3 +88,4 @@ class Products extends Component {
 }
 
 export default Products;
+// هتستخدم consumer عشان تجيب الsetCartData هنا وبعدين تشتغل طبيعي 

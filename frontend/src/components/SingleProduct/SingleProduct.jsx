@@ -5,15 +5,20 @@ import { useParams } from "react-router-dom";
 import SimpleSlider from "../Slider/Slider";
 import parse from 'html-react-parser';
 import CartContext from "../../Context/CartContext";
+import toast from "react-hot-toast";
+import CartVisible from "../../Context/CartVisible";
 
 const SingleProduct = () => {
   const [product, setProduct] = useState(null);
   const [cartData,setCartData] = useContext(CartContext)
+  const [cartVisible, setCartVisible] = useContext(CartVisible);
+
   console.log("singleProduct",cartData)
   const [attributes,setAttributes] = useState({
   })
-
-
+  // const [validData,setValidData] = useState(false)
+  const [errors,setErrors] = useState([])
+  console.log(errors)
   console.log(product ? product : false);
 
   const { id } = useParams();
@@ -28,7 +33,7 @@ const SingleProduct = () => {
             Product(id: $id) {
               id
               name
-              description
+              description 
               brand
               inStock
               category
@@ -61,6 +66,37 @@ const SingleProduct = () => {
 
     li.querySelector('button').click()
   }
+
+  const handleAddItemToCart = ()=>{
+    let err = []
+    product?.attributes.map((attr,i)=>{
+      console.log(attr)
+      if(attributes[attr.id] === undefined){
+       err.push(attr.id)
+       setErrors(err)
+      }else{
+        setErrors([])
+      }
+    })
+  
+
+    if(err.length > 0 ) {
+      return err.length > 1 ? toast.error(`${err.join(" and ")} are required ` ) : toast.error(`${err.join(" ")} is required `)
+    }else{
+           setCartData([...cartData,{
+            id:product.id,
+            name:product.name,
+            price:product.prices[0].amount,
+            currency:JSON.parse(product.prices[0].currency).symbol,
+            attributes:product.attributes,
+            selectedAttr:attributes,
+            quantity:1,
+            gallery:product.gallery
+          }])
+    }
+  }
+
+  
   return (
    product &&  <div className="flex gap-32 my-12 relative">
 
@@ -122,18 +158,10 @@ const SingleProduct = () => {
         <h2 className="text-2xl font-bold my-4">Price:</h2>
         <p className="font-bold text-2xl">{JSON.parse(product.prices[0].currency).symbol}{product?.prices[0].amount}</p>
 
-        <button className="bg-green-500 text-white text-center w-full p-4 text-xl my-4" onClick={()=>{
-          setCartData([...cartData,{
-            id:product.id,
-            name:product.name,
-            price:product.prices[0].amount,
-            currency:JSON.parse(product.prices[0].currency).symbol,
-            attributes:product.attributes,
-            selectedAttr:attributes,
-            quantity:1,
-            gallery:product.gallery
-          }])
-        }}>Add To Cart</button>
+        <button className={`${!product.inStock && "grayscale cursor-not-allowed"} ${Object.keys(attributes).length !== product.attributes.length && "grayscale cursor-not-allowed"}  bg-green-500 text-white text-center w-full p-4 text-xl my-4`} onClick={()=>{
+          handleAddItemToCart()
+          setCartVisible(true)
+        }} disabled={Object.keys(attributes).length !== product.attributes.length}>Add To Cart</button>
       <div className="text-lg  ">
         
         { parse( product.description)}
