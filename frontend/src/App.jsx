@@ -1,5 +1,4 @@
-// src/App.js
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import NavContext from './Context/NavContext';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Pages/Home';
@@ -7,33 +6,56 @@ import Navbar from './components/Navbar/Navbar';
 import Product from './Pages/Product';
 import CartContext from './Context/CartContext';
 import CartVisible from './Context/CartVisible';
-import QunatityContext from './Context/QuantityContext';
+import QuantityContext from './Context/QuantityContext';
 
-const App = () => {
-  const [cur,setCur] = useState("tech")
-  const [cartData,setCartData] = useState([])
-  const [cartVisible,setCartVisible] = useState(false)
-  const [quantity,setQuantity] = useState(0)
-  return (
-    <NavContext.Provider value={[cur,setCur]} >
-      <QunatityContext.Provider value={[quantity,setQuantity]}>
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cur: "tech",
+      cartData: [],
+      cartVisible: false,
+      quantity: 0
+    };
+  }
 
-      <CartVisible.Provider value={[cartVisible,setCartVisible]} >
+  setCur = (newCur) => {
+    this.setState({ cur: newCur });
+  };
 
-<CartContext.Provider value={[cartData,setCartData]} >
-    <div >
-      <Navbar/>
-  
-      <Routes>
-    <Route path='/' element={<Home/>} /> 
-    <Route path='/product/:id' element={<Product/>} /> 
-      </Routes>
-    </div>
-</CartContext.Provider>
-      </CartVisible.Provider>
-      </QunatityContext.Provider>
-    </NavContext.Provider>
-  );
-};
+  setCartData = (newCartData) => {
+    this.setState({ cartData: newCartData });
+  };
+
+  setCartVisible = (newVisibility) => {
+    this.setState({ cartVisible: newVisibility });
+  };
+
+  setQuantity = (newQuantity) => {
+    this.setState({ quantity: newQuantity });
+  };
+
+  render() {
+    const { cur, cartData, cartVisible, quantity } = this.state;
+
+    return (
+      <NavContext.Provider value={[cur, this.setCur]}>
+        <QuantityContext.Provider value={[quantity, this.setQuantity]}>
+          <CartVisible.Provider value={[cartVisible, this.setCartVisible]}>
+            <CartContext.Provider value={[cartData, this.setCartData]}>
+              <div>
+                <Navbar />
+                <Routes>
+                  <Route path='/' element={<Home />} />
+                  <Route path='/product/:id' element={<Product />} />
+                </Routes>
+              </div>
+            </CartContext.Provider>
+          </CartVisible.Provider>
+        </QuantityContext.Provider>
+      </NavContext.Provider>
+    );
+  }
+}
 
 export default App;

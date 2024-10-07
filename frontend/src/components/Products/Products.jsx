@@ -56,7 +56,7 @@ class Products extends Component {
         const price = JSON.parse(product.prices[0].currency).symbol + product.prices[0].amount;
         console.log(product?.attributes )
         return (
-            <div key={index} className='hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)] p-3 cursor-pointer group mb-10'>
+            <div key={index} className='hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)] p-3 cursor-pointer group mb-10' data-testid={`product-${product.name.toLowerCase().split(" ").join("-")}`}>
              <Link to={`/product/${product.id}`}>
              <div className='relative'>
                     <img src={galleryImage[0]} alt={product.name} className={`w-full h-[300px] object-contain ${!product.inStock && "opacity-20"}`} />

@@ -136,7 +136,7 @@ class SingleProduct extends Component {
             {product?.attributes.length > 0 && (
               <div>
                 {product?.attributes.map((attr, i) => (
-                  <div key={i} className="flex flex-col gap-2 mt-10">
+                  <div key={i} className="flex flex-col gap-2 mt-10" data-testid={`product-attribute-${attr.id.toLowerCase().split(" ").join("-")}`}>
                     <h2 className="text-2xl font-bold">{attr.id}:</h2>
                     <ul className="flex gap-4">
                       {JSON.parse(attr.items).map((pr, i) => (
@@ -216,6 +216,8 @@ class SingleProduct extends Component {
                           Object.keys(attributes).length !==
                           product.attributes.length || !product.inStock
                         }
+
+                        data-testid='add-to-cart'
                       >
                         Add To Cart
                         
@@ -225,7 +227,7 @@ class SingleProduct extends Component {
                 )}
               </CartContextConsumer.Consumer>
 
-              <div className="text-lg">{parse(product.description)}</div>
+              <div className="text-lg" data-testid='product-description'>{parse(product.description)}</div>
             </div>
           </div>
         </div>

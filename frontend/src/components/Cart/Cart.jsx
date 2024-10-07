@@ -74,7 +74,7 @@ const handleInsertOrder = ()=>{
 }
   return (
     cartVisible && (
-      <div className="absolute top-10 right-0 w-[325px] h-[628px]  bg-white z-20 px-4 flex flex-col gap-4  ">
+      <div className="absolute top-10 right-0 w-[325px] h-[628px]  bg-white z-20 px-4 flex flex-col gap-4  " data-testid='cart-item-attribute-${attribute name in kebab case}'>
         <h1 className="text-lg mt-3">
           <span className="font-bold">My Bag,</span> {quantity} item
           {quantity > 1 && "s"}
@@ -99,19 +99,37 @@ const handleInsertOrder = ()=>{
                     {item.attributes?.map((attr, i) => {
                       console.log(attr);
                       return (
-                        <>
+                      <>
+                      
+                      <div data-testid={`cart-item-attribute-${attr.id.toLowerCase()}`}>
                         <h2 className="text-xl cursor-default ">{attr.id}:</h2>
                           <ul className="flex gap-1 flex-wrap">
                             {JSON.parse(attr.items).map((pr,i)=>{
+                              console.log(pr)
                                 return attr.type == "swatch" ? (
                                     <>
-                                     <li key={i} className={`${item?.selectedAttr[attr.id] == pr.value ? "border-4 border-green-500 " : ""}w-[20px] h-[20px]  cursor-default `} onClick={()=>setAttributes({...attributes,[attr.id]:pr.value})} style={{background:`${pr.displayValue}`}}>
-      
-      </li>
+                                <li  
+  key={i} 
+  data-testid={
+    item?.selectedAttr[attr.id] === pr.value 
+      ? `cart-item-attribute-${attr.id.replace(/\s+/g, '-').toLowerCase()}-${pr.id.replace(/\s+/g, '-').toLowerCase()}-selected` 
+      : `cart-item-attribute-${attr.id.replace(/\s+/g, '-').toLowerCase()}-${pr.id.replace(/\s+/g, '-').toLowerCase()}`
+  }
+  className={`${item?.selectedAttr[attr.id] === pr.value ? "border-4 border-green-500" : ""} w-[20px] h-[20px] cursor-default`}
+  onClick={() => setAttributes({...attributes, [attr.id]: pr.value})}
+  style={{ background: `${pr.displayValue}` }}
+  
+>
+</li>
+
                                     </>
                                   ) : (
                                     <>
-                                     <li key={i} className={`${item?.selectedAttr[attr.id] == pr.value ? "bg-black text-white":""} border-2 cursor-default  border-black p-1 w-[30px] h-[30px] text-[10px] font-bold flex justify-center items-center min-w-fit`} onClick={()=>{
+                                     <li key={i}  data-testid={
+    item?.selectedAttr[attr.id] === pr.value 
+      ? `cart-item-attribute-${attr.id.replace(/\s+/g, '-').toLowerCase()}-${pr.id.replace(/\s+/g, '-').toLowerCase()}-selected` 
+      : `cart-item-attribute-${attr.id.replace(/\s+/g, '-').toLowerCase()}-${pr.id.replace(/\s+/g, '-').toLowerCase()}`
+  } className={`${item?.selectedAttr[attr.id] == pr.value ? "bg-black text-white":""} border-2 cursor-default  border-black p-1 w-[30px] h-[30px] text-[10px] font-bold flex justify-center items-center min-w-fit`}  onClick={()=>{
                 
                 setAttributes({...attributes,[attr.id]:pr.value})
               }}>
@@ -121,7 +139,8 @@ const handleInsertOrder = ()=>{
                                   )
                             })}
                           </ul>
-                        </>
+                        </div>
+                      </>
                       );
                     })}
                   </div>
@@ -140,11 +159,13 @@ const handleInsertOrder = ()=>{
     })
   }
   }
+
+  data-testid='cart-item-amount-increase'
 >
   +
 </div>
 
-<p>{quan[JSON.stringify(item.selectedAttr)] !== undefined ? quan[JSON.stringify(item.selectedAttr)] : 1}</p> 
+<p data-testid='cart-item-amount'>{quan[JSON.stringify(item.selectedAttr)] !== undefined ? quan[JSON.stringify(item.selectedAttr)] : 1}</p> 
 
 <div
   className="w-[30px] h-[30px] border-2 border-black flex items-center justify-center"
@@ -167,6 +188,8 @@ const handleInsertOrder = ()=>{
     
    }
   }
+
+  data-testid='cart-item-amount-decrease'
 >
   -
 </div>
@@ -185,7 +208,7 @@ const handleInsertOrder = ()=>{
        <div>
         <div className="flex justify-between items-center">
           <h2>Total</h2>
-          <p>${totalPrice.toFixed(2)}</p>     
+          <p data-testid='cart-total'>${totalPrice.toFixed(2)}</p>     
         </div>
 
         <div className="my-4 ">

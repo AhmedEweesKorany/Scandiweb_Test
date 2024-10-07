@@ -61,11 +61,11 @@ class Navbar extends Component {
                     {categories &&
                       categories.map((category) => (
                         cur === category.name ? (
-                          <li key={category.name} className="cursor-pointer  text-green-500 underline-offset-8 underline">
+                          <li key={category.name} className="cursor-pointer  text-green-500 underline-offset-8 underline" data-testid='active-category-link'>
                             {category.name}
                           </li>
                         ) : (
-                          <li key={category.name} className="cursor-pointer hover:text-green-500" onClick={() => setCur(category.name)}>
+                          <li key={category.name} data-testid='category-link' className="cursor-pointer hover:text-green-500" onClick={() => setCur(category.name)}>
                             {category.name}
                           </li>
                         )
@@ -87,9 +87,13 @@ class Navbar extends Component {
     
                 {/* Cart Icon */}
                 <div className="cursor-pointer text-2xl relative" >
-                  <IoCartOutline onClick={() => setCartVisible(!cartVisible)} />
+
+                    <button onClick={() => setCartVisible(!cartVisible)} data-testid='cart-btn'>
+                  <IoCartOutline  />
+
+                    </button>
                   {cartData?.length > 0 && (
-                    <div onClick={() => setCartVisible(!cartVisible)} className="absolute left-4 bottom-4 bg-black w-[17px] h-[17px] rounded-full flex justify-center items-center text-[10px] min-w-fit  font-bold text-white">
+                    <div onClick={() => setCartVisible(!cartVisible)} className="absolute left-4 bottom-5 bg-black w-[17px] h-[17px] rounded-full flex justify-center items-center text-[10px] min-w-fit  font-bold text-white">
                       {quantity}
                     </div>
                   )}
