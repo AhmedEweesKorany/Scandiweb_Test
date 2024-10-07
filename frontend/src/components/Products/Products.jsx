@@ -129,4 +129,3 @@ class Products extends Component {
 }
 
 export default Products;
-// هتستخدم consumer عشان تجيب الsetCartData هنا وبعدين تشتغل طبيعي 
